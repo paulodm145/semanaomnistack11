@@ -37,25 +37,21 @@ module.exports = {
 	    return res.json({ id });
     },
 
-    async delete(req, res){
-        const { id } = request.params;
-        const ong_id = req.headers.authorization;
-
+    async delete(request, response) {
+        const { id } = request.params
+        const ong_id = request.headers.authorization
+    
         const incident = await connection('incidents')
-        .where('id', id)
-        .select('ong_id')
-        .first();
-
-        if (incident.ong_id != ong_id){
-            return res.status(401).json({ error: 'Operation not permitted' });
+          .where('id', id)
+          .select('ong_id')
+          .first()
+    
+        if (incident.ong_id !== ong_id) {
+          return response.status(401).json({ error: 'Operation not permitted.' })
         }
-
-        await connection('incidents').where('id', id).delete();
-
-        /**resposta Vazia(sem corpo) */
-        return Response.status(204).send();
-
+    
+        await connection('incidents').where('id', id).delete()
+    
+        return response.status(204).send()
+      },
     }
-
-
-}
